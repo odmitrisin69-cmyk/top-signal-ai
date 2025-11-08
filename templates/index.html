@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Secret AI Signal</title>
+    <style>
+        body {
+            background-color: #0e0e10;
+            color: #e8e8e8;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #00ffaa;
+        }
+        .pair-box {
+            display: inline-block;
+            background: #1b1b1f;
+            border: 2px solid #00ffaa;
+            border-radius: 12px;
+            margin: 10px;
+            padding: 15px;
+            width: 280px;
+            box-shadow: 0 0 10px #00ffaa55;
+        }
+        button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .buy { background-color: #00ff99; color: #000; }
+        .sell { background-color: #ff4b4b; color: #fff; }
+        .hold { background-color: #808080; color: #fff; }
+        #time {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Top Secret AI Signal 🤖</h1>
+    <div id="signals"></div>
+    <div id="time"></div>
+
+    <script>
+        async function loadSignals() {
+            const res = await fetch("/signals");
+            const data = await res.json();
+            const container = document.getElementById("signals");
+            container.innerHTML = "";
+            data.forEach(sig => {
+                const box = document.createElement("div");
+                box.className = "pair-box";
+                box.innerHTML = `
+                    <h3>${sig.pair}</h3>
+                    <p><strong>Сигнал:</strong> ${sig.signal}</p>
+                    <p><strong>Ймовірність:</strong> ${sig.confidence}%</p>
+                    <button class="${sig.signal.toLowerCase()}">${sig.signal}</button>
+                    <p style="font-size: 12px; color: gray;">${sig.timestamp}</p>
+                `;
+                container.appendChild(box);
+            });
+            document.getElementById("time").textContent =
+                "Оновлено: " + new Date().toLocaleTimeString();
+        }
+        loadSignals();
+        setInterval(loadSignals, 15000);
+    </script>
+</body>
+</html>
